@@ -1,2 +1,4 @@
 streamlit==0.87.0
 vk==2.0.2
+APScheduler==3.7.0
+openpyxl~=3.0.7
