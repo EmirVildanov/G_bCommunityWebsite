@@ -68,13 +68,12 @@ if __name__ == "__main__":
 
     st.title('Vk user activity tracker')
 
-    st.write("Emir's secret key: frise_bichon_848")
-
     account_info = st.text_input("Enter your surname (In English) or id (If you've already used visited this website):")
 
     if account_info != "" and account_info.isnumeric() and int(account_info) > 0 and mongo_worker.is_id_exists(account_info):
         if mongo_worker.is_account_with_id_is_public(id):
-            print(1)
+            st.write("Your account is public")
+
     if account_info != "" and mongo_worker.is_surname_exists(account_info):
         write_secret_key_bot_communication_info()
 
@@ -95,16 +94,8 @@ if __name__ == "__main__":
             )
             f"Chosen date: {option}"
 
-            chart, df, test_df, raw_df = graph_worker.get_one_day_altair_chart_for_id(activity_csv, option, follower_id)
+            chart = graph_worker.get_one_day_altair_chart_for_id(activity_csv, option, follower_id)
             st.altair_chart(chart, use_container_width=True)
-
-            st.write(raw_df)
-            st.write(test_df)
-            st.write(df)
-
-            st.write(raw_df.shape)
-            st.write(test_df.shape)
-            st.write(df.shape)
         elif secret_key != "":
             write_error("Key is wrong, so I can't show you the info")
     elif account_info != "":

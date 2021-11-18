@@ -1,5 +1,4 @@
 import datetime
-from io import StringIO
 
 import pandas as pd
 import altair as alt
@@ -37,7 +36,6 @@ class GraphDataWorker:
 
         minutes_intervals_datetimes_dict = {}
         current_datetime = datetime.datetime.min
-        # platforms_dict = []
         platforms_list = []
 
         for i in range(MINUTES_INTERVALS_NUMBER):
@@ -47,10 +45,11 @@ class GraphDataWorker:
                 minutes_intervals_datetimes_dict[current_datetime] = None
 
             if i in platform_dict:
-                # platforms_dict[current_datetime] = platform_dict[i]
-                platforms_list.append(platform_dict[i])
+                if minutes_interval_online_dict[i] == 0:
+                    platforms_list.append(None)
+                else:
+                    platforms_list.append(platform_dict[i])
             else:
-                # platforms_dict[current_datetime] = None
                 platforms_list.append(None)
             current_datetime += datetime.timedelta(0, 0, 0, 0, MINUTES_INTERVAL)
 
@@ -68,32 +67,20 @@ class GraphDataWorker:
         df[index_name] = pd.to_datetime(df[index_name], format=DATETIME_TIME_INTERVAL_NAME_FORMAT)
         df[index_name] = df[index_name].dt.tz_localize('Europe/Moscow')
 
-        # selection = alt.selection_multi(fields=[PLATFORM_KEY], bind="legend")
-
-        hover = alt.selection(
-            type="single", on="mouseover", fields=[index_name], nearest=True
-        )
+        selection = alt.selection_multi(fields=[PLATFORM_KEY], bind="legend")
 
         chart = alt.Chart(df).mark_circle().encode(
             alt.X(f'hoursminutes({index_name}):O', title='day time'),
             alt.Y(f'{ONLINE_KEY}:N', sort="descending"),
             color=alt.Color(f'{PLATFORM_KEY}:N'),
-            # opacity=alt.condition(selection, alt.value(1), alt.value(0.1))
+            opacity=alt.condition(selection, alt.value(1), alt.value(0.1))
         ).properties(
             title=f"User online activity on {chosen_day.strftime(DATETIME_SAVE_FILE_NAME_FORMAT)}",
             width=800,
             height=800
         )
 
-        point = chart.mark_circle().encode(
-            opacity=alt.value(0)
-        ).add_selection(hover)
-
-        singleline = chart.mark_line().encode(
-            size=alt.condition(~hover, alt.value(0.5), alt.value(3))
-        )
-
-        return chart, df, test_df, df_for_id_and_day
+        return chart
 
     @staticmethod
     def get_one_month_altair_chart_for_id(chosen_month: datetime.datetime, follower_id: int):
