@@ -78,6 +78,8 @@ class GraphDataWorker:
             title=f"User online activity on {chosen_day.strftime(DATETIME_SAVE_FILE_NAME_FORMAT)}",
             width=800,
             height=800
+        ).add_selection(
+            selection
         )
 
         return chart
