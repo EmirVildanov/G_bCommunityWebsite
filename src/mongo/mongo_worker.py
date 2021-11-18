@@ -1,4 +1,3 @@
-import datetime
 import os
 from io import StringIO
 from typing import List
@@ -52,26 +51,6 @@ class MongoWorker:
     def get_user_id_by_secret_key(self, follower_secret_key: str):
         return self.accounts.find_one({SECRET_KEY_KEY: follower_secret_key})
 
-    def prepare_accounts_collection(self, followers_info: List[FollowerInfo]):
-        self.insert_followers_info(followers_info)
-        Utils.log_info("Prepared followers info")
-
-    def insert_activity_info(self, followers_info: List[FollowerInfo]):
-        current_date = datetime.datetime.now()
-        activities_info = self.vk_worker.get_followers_activity_info(current_date, followers_info)
-
-        for activity_info in activities_info:
-            activity_document = {
-                ID_KEY: activity_info.id,
-                MINUTES_INTERVAL_NUMBER_KEY: activity_info.minutes_interval_number,
-                DATETIME_KEY: activity_info.datetime,
-                LAST_SEEN_DATETIME_KEY: activity_info.last_seen_datetime,
-                ONLINE_KEY: activity_info.online,
-                PLATFORM_KEY: activity_info.platform
-            }
-            self.activity_data.insert_one(activity_document)
-        Utils.log_info(f"Inserted activities info")
-
     def get_activity_info_csv(self) -> StringIO:
         activities = self.activity_data.find()
         output = StringIO("")
@@ -111,11 +90,4 @@ class MongoWorker:
 
     def is_account_with_id_is_public(self, id):
         account = self.accounts.find({ID_KEY: id})
-        return
-
-
-    def made_interval_activity_filling_action(self):
-        followers_info = self.vk_worker.get_followers_info()
-        self.prepare_accounts_collection(followers_info)
-        self.insert_activity_info(followers_info)
-        # self.generate_activity_info_csv()
+        return account[IS_PUBLIC_KEY] is True
