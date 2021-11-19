@@ -141,7 +141,11 @@ if __name__ == "__main__":
 
         df = data_worker.get_one_day_df_for_id(activity_csv, pretty_available_datetime_pairs[date_option],
                                                follower_id)
-        fig = px.scatter(df, x="time", y="online_status", color="platform", symbol="platform",
+        fig = px.scatter(df, x="index", y="online", color="platform", symbol="platform",
+                         labels={
+                             "index": "time",
+                             "online": "online_status",
+                         },
                          category_orders={"online": ["ONLINE", "OFFLINE", "UNKNOWN"],
                                           "platform": ["MOBILE", "WEB", "NO"]})
         st.plotly_chart(fig, use_container_width=True)
