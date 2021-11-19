@@ -145,3 +145,5 @@ if __name__ == "__main__":
                          category_orders={"online": ["ONLINE", "OFFLINE", "UNKNOWN"],
                                           "platform": ["MOBILE", "WEB", "NO"]})
         st.plotly_chart(fig, use_container_width=True)
+
+    st.write("Check out github repo [link](https://github.com/EmirVildanov/G_bCommunityWebsite) !")
