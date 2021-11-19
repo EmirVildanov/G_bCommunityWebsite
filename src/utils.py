@@ -4,12 +4,21 @@ import requests
 
 class Utils:
     @staticmethod
-    def get_date_truncated(date: datetime) -> datetime:
+    def get_date_truncated_by_minutes(date: datetime) -> datetime:
+        return datetime.datetime(date.year, date.month, date.day, date.hour, date.minute)
+
+    @staticmethod
+    def get_date_truncated_by_day(date: datetime) -> datetime:
+        try:
+            result = datetime.datetime(date.year, date.month, date.day)
+        except AttributeError:
+            print(f"Date that crash: {date}")
+            raise AttributeError
         return datetime.datetime(date.year, date.month, date.day)
 
     @staticmethod
     def get_date_truncated_from_string(date_string: str, format: str) -> datetime.datetime:
-        return Utils.get_date_truncated(Utils.get_datetime_from_string(date_string, format))
+        return Utils.get_date_truncated_by_day(Utils.get_datetime_from_string(date_string, format))
 
     @staticmethod
     def get_datetime_from_string(date_string: str, format: str) -> datetime.datetime:

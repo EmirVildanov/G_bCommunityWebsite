@@ -7,7 +7,7 @@ import pymongo
 from src.configuration import GROUP_ACCESS_TOKEN
 from src.mongo.constants import *
 from src.utils import Utils
-from src.vk.vk_worker import VkWorker, FollowerInfo
+from src.vk.vk_worker import VkWorker, FollowerInfo, PrivateFollowerInfo
 
 
 class MongoWorker:
@@ -50,6 +50,12 @@ class MongoWorker:
 
     def get_user_id_by_secret_key(self, follower_secret_key: str):
         return self.accounts.find_one({SECRET_KEY_KEY: follower_secret_key})
+
+    def get_public_followers_info(self) -> List[PrivateFollowerInfo]:
+        public_accounts = self.accounts.find({IS_PUBLIC_KEY: True})
+        return [PrivateFollowerInfo(id=account[ID_KEY], name=account[NAME_KEY], surname=account[SURNAME_KEY]) for account
+                in
+                public_accounts]
 
     def get_activity_info_csv(self) -> StringIO:
         activities = self.activity_data.find()
