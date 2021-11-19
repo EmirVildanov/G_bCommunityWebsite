@@ -7,3 +7,8 @@ Only with this key you will have access to your Vk activity tracking.
 about your online activity on concrete day or mean activity through all days
 
 You may see the website [here](https://general-bum-activity-tracker.herokuapp.com/)
+
+## Screenshots
+![Main screenshot](screenshots/main.jpg?raw=true "Main screenshot")
+
+![Plot screenshot](screenshots/plot.jpg?raw=true "Plot screenshot") 

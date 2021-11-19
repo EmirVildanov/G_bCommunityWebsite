@@ -141,9 +141,10 @@ if __name__ == "__main__":
 
         df = data_worker.get_one_day_df_for_id(activity_csv, pretty_available_datetime_pairs[date_option],
                                                follower_id)
-        fig = px.scatter(df, x="index", y="online", color="platform", symbol="platform",
+        fig = px.scatter(df, x="time", y="online_status", color="platform", symbol="platform",
                          category_orders={"online": ["ONLINE", "OFFLINE", "UNKNOWN"],
                                           "platform": ["MOBILE", "WEB", "NO"]})
         st.plotly_chart(fig, use_container_width=True)
 
+    st.text("")
     st.write("Check out github repo [link](https://github.com/EmirVildanov/G_bCommunityWebsite) !")
