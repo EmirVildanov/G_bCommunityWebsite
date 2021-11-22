@@ -140,18 +140,11 @@ if __name__ == "__main__":
 
     if follower_id != -1:
         activity_csv = get_activity_csv()
-        # activity_data = mongo_worker.get_activity_info_csv()
-        # activity_csv = pd.read_csv(activity_data, sep=",")
         activity_csv[DATETIME_KEY] = pd.to_datetime(activity_csv[DATETIME_KEY])
 
         available_dates = DataWorker.get_available_days_for_id(activity_csv, follower_id)
         pretty_available_datetime_pairs = {datetime.datetime.strftime(date, DATETIME_ONLY_DATE_FORMAT): date for
                                            date in available_dates}
-
-        # date_option = st.selectbox(
-        #     "Choose the date",
-        #     pretty_available_datetime_pairs.keys()
-        # )
 
         date = st.date_input(
             "Choose the date",
@@ -159,9 +152,6 @@ if __name__ == "__main__":
             min_value=available_dates[0],
             max_value=available_dates[len(available_dates) - 1]
         )
-
-        st.write(date)
-        st.write(activity_csv)
 
         df = data_worker.get_one_day_df_for_id(activity_csv, date,
                                                follower_id)

@@ -30,7 +30,7 @@ class DataWorker:
             return "UNKNOWN"
         raise ArithmeticError(f"Online status must be 0, 1 or None. Was: {online_status_int}")
 
-    def get_one_day_df_for_id(self, activity_csv: pd.DataFrame, chosen_date: datetime.datetime, follower_id: int):
+    def get_one_day_df_for_id(self, activity_csv: pd.DataFrame, chosen_date: datetime.date, follower_id: int):
         raw_df = activity_csv.copy()
 
         df_for_id = raw_df
@@ -38,7 +38,8 @@ class DataWorker:
 
         df_for_id_and_day = df_for_id.copy()
 
-        df_for_id_and_day = df_for_id_and_day[df_for_id_and_day[DATETIME_KEY].apply(Utils.get_date_truncated_by_day) == chosen_date]
+        chosen_datetime = datetime.datetime.combine(chosen_date, datetime.time())
+        df_for_id_and_day = df_for_id_and_day[df_for_id_and_day[DATETIME_KEY].apply(Utils.get_date_truncated_by_day) == chosen_datetime]
 
         filtered_df = df_for_id_and_day[[MINUTES_INTERVAL_NUMBER_KEY, ONLINE_KEY, PLATFORM_KEY]].set_index(MINUTES_INTERVAL_NUMBER_KEY)
         minutes_interval_online_dict = filtered_df.to_dict()[ONLINE_KEY]
