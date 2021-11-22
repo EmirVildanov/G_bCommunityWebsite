@@ -92,8 +92,9 @@ if __name__ == "__main__":
     st.write("**Public accounts**. Data about public accounts is public and can be viewed by anyone.")
     st.write("**Private accounts**. "
              "Data about private accounts is hidden and can only be viewed by users who have the secret key.")
-
     st.write("**You can always change whether your account is private or public on this website**")
+    st.text("")
+
     pretty_publicity_options = {choice.name: choice for choice in PublicityChoice}
     publicity_option = st.selectbox(
         "Choose the information type you want to get:",
@@ -147,10 +148,10 @@ if __name__ == "__main__":
         pretty_available_datetime_pairs = {datetime.datetime.strftime(date, DATETIME_ONLY_DATE_FORMAT): date for
                                            date in available_dates}
 
-        date_option = st.selectbox(
-            "Choose the date",
-            pretty_available_datetime_pairs.keys()
-        )
+        # date_option = st.selectbox(
+        #     "Choose the date",
+        #     pretty_available_datetime_pairs.keys()
+        # )
 
         date = st.date_input(
             "Choose the date",
@@ -158,6 +159,9 @@ if __name__ == "__main__":
             min_value=available_dates[0],
             max_value=available_dates[len(available_dates) - 1]
         )
+
+        st.write(date)
+        st.write(activity_csv)
 
         df = data_worker.get_one_day_df_for_id(activity_csv, date,
                                                follower_id)
