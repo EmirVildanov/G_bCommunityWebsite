@@ -159,7 +159,7 @@ if __name__ == "__main__":
                              "online": "online_status",
                          },
                          category_orders={"online": ["ONLINE", "OFFLINE", "UNKNOWN"],
-                                          "platform": ["MOBILE", "WEB", "NO"]})
+                                          "platform": ["MOBILE", "ANDROID", "IPHONE", "WEB", "NO"]})
         st.plotly_chart(fig, use_container_width=True)
 
     st.text("")
