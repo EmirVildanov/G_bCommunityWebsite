@@ -1,5 +1,7 @@
 import os
-GROUP_ACCESS_TOKEN_KEY = "GROUP_ACCESS_TOKEN"
+
+from src.configuration_keys import GROUP_ACCESS_TOKEN_KEY
+
 GROUP_ACCESS_TOKEN = os.environ.get(GROUP_ACCESS_TOKEN_KEY, None)
 if GROUP_ACCESS_TOKEN is None:
     raise RuntimeError(f"Can't read environment GROUP_ACCESS_TOKEN_KEY variable")

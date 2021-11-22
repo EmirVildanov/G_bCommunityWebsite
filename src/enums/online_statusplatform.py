@@ -9,3 +9,4 @@ class OnlineStatusPlatform(Enum):
     WPHONE = 5
     WINDOWS = 6
     WEB = 7
+    NO = 8

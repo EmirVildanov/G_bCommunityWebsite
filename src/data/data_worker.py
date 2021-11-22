@@ -46,12 +46,10 @@ class DataWorker:
         platform_dict = filtered_df.to_dict()[PLATFORM_KEY]
 
         minutes_intervals_datetimes_dict = {}
-        current_datetime = chosen_date
+        current_datetime = chosen_datetime
         platforms_list = []
 
-        no = "NO"
         for i in range(MINUTES_INTERVALS_NUMBER):
-
             if i in minutes_interval_online_dict:
                 current_online_status = minutes_interval_online_dict[i]
             else:
@@ -60,11 +58,11 @@ class DataWorker:
 
             if i in platform_dict:
                 if minutes_interval_online_dict[i] == 0:
-                    platforms_list.append(no)
+                    platforms_list.append(OnlineStatusPlatform.NO.name)
                 else:
                     platforms_list.append(OnlineStatusPlatform(platform_dict[i]).name)
             else:
-                platforms_list.append(no)
+                platforms_list.append(OnlineStatusPlatform.NO.name)
             current_datetime += datetime.timedelta(0, 0, 0, 0, MINUTES_INTERVAL)
 
         df = pd.Series(minutes_intervals_datetimes_dict).to_frame(ONLINE_KEY)

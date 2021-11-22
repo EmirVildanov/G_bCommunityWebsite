@@ -14,47 +14,47 @@ from src.vk.vk_worker import VkWorker
 
 def write_account_info_bot_communication_info():
     st.markdown(
-        "<h3 style='text-align: center;'>In order to obtain your account info send</h1>",
+        "<h4 style='text-align: center;'>In order to obtain your account info send</h1>",
         unsafe_allow_html=True)
 
     st.markdown(
-        f"<h4 style='text-align: center; color: green'>{SECRET_MESSAGE_LINE_ASKING_FOR_ACCOUNT_INFO}</h1>",
+        f"<h5 style='text-align: center; color: green'>{SECRET_MESSAGE_LINE_ASKING_FOR_ACCOUNT_INFO}</h1>",
         unsafe_allow_html=True)
 
     st.markdown(
-        "<h3 style='text-align: center;'>message to G_b group messages</h1>",
+        "<h4 style='text-align: center;'>message to G_b group messages</h1>",
         unsafe_allow_html=True)
 
 
 def write_secret_key_bot_communication_info():
     st.markdown(
-        "<h3 style='text-align: center;'>To see your online activity you have to receive private security key</h1>",
+        "<h4 style='text-align: center;'>To see your online activity you have to receive private security key</h1>",
         unsafe_allow_html=True)
 
     st.markdown(
-        "<h3 style='text-align: center;'>In order to do it send</h1>",
+        "<h4 style='text-align: center;'>In order to do it send</h1>",
         unsafe_allow_html=True)
 
     st.markdown(
-        f"<h4 style='text-align: center; color: green'>{SECRET_MESSAGE_LINE_ASKING_FOR_PASSWORD}</h1>",
+        f"<h5 style='text-align: center; color: green'>{SECRET_MESSAGE_LINE_ASKING_FOR_PASSWORD}</h1>",
         unsafe_allow_html=True)
 
     st.markdown(
-        "<h3 style='text-align: center;'>message to G_b group messages</h1>",
+        "<h4 style='text-align: center;'>message to G_b group messages</h1>",
         unsafe_allow_html=True)
 
 
 def write_change_publicity_status_bot_communication_info():
     st.markdown(
-        "<h3 style='text-align: center;'>In order to change your account publicity status send</h1>",
+        "<h4 style='text-align: center;'>In order to change your account publicity status send</h1>",
         unsafe_allow_html=True)
 
     st.markdown(
-        f"<h4 style='text-align: center; color: green'>{SECRET_MESSAGE_LINE_ASKING_TO_CHANGE_PUBLIC_STATUS}</h1>",
+        f"<h5 style='text-align: center; color: green'>{SECRET_MESSAGE_LINE_ASKING_TO_CHANGE_PUBLIC_STATUS}</h1>",
         unsafe_allow_html=True)
 
     st.markdown(
-        "<h3 style='text-align: center;'>message to G_b group messages</h1>",
+        "<h4 style='text-align: center;'>message to G_b group messages</h1>",
         unsafe_allow_html=True)
 
 
@@ -62,12 +62,6 @@ def write_error(message: str):
     st.markdown(
         f"<h4 style='text-align: left; color: red'>{message}</h1>",
         unsafe_allow_html=True)
-
-
-@st.cache
-def get_activity_csv():
-    activity_data = mongo_worker.get_activity_info_csv()
-    return pd.read_csv(activity_data, sep=",")
 
 
 if __name__ == "__main__":
@@ -94,6 +88,7 @@ if __name__ == "__main__":
              "Data about private accounts is hidden and can only be viewed by users who have the secret key.")
     st.write("**You can always change whether your account is private or public on this website**")
     st.text("")
+    st.text("")
 
     pretty_publicity_options = {choice.name: choice for choice in PublicityChoice}
     publicity_option = st.selectbox(
@@ -105,6 +100,7 @@ if __name__ == "__main__":
 
     if pretty_publicity_options[publicity_option] == PublicityChoice.PUBLIC:
         st.write("Here you can only discover users who marked their accounts as public.")
+        st.text("")
 
         public_accounts = mongo_worker.get_public_followers_info()
         if len(public_accounts) != 0:
@@ -122,6 +118,7 @@ if __name__ == "__main__":
     else:
         st.write("Here you can view data about your account without making it public.")
         st.write("To do this you must obtain a secret key.")
+        st.text("")
 
         account_info = st.text_input("Enter your surname:")
 
@@ -139,7 +136,8 @@ if __name__ == "__main__":
             write_account_info_bot_communication_info()
 
     if follower_id != -1:
-        activity_csv = get_activity_csv()
+        activity_data = mongo_worker.get_activity_info_csv()
+        activity_csv = pd.read_csv(activity_data, sep=",")
         activity_csv[DATETIME_KEY] = pd.to_datetime(activity_csv[DATETIME_KEY])
 
         available_dates = DataWorker.get_available_days_for_id(activity_csv, follower_id)
