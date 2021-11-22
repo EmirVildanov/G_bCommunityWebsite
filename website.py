@@ -64,6 +64,12 @@ def write_error(message: str):
         unsafe_allow_html=True)
 
 
+@st.cache
+def get_activity_csv():
+    activity_data = mongo_worker.get_activity_info_csv()
+    return pd.read_csv(activity_data, sep=",")
+
+
 if __name__ == "__main__":
     st.set_page_config(layout="wide")
     data_worker = DataWorker()
@@ -80,9 +86,14 @@ if __name__ == "__main__":
     """
     st.markdown(hide_streamlit_settings_style, unsafe_allow_html=True)
 
-    st.title("G_b followers activity tracker")
+    st.title("[G_b](https://vk.com/gebum) followers activity tracker")
     st.write("(data loading can take a lot of time, yeah)")
 
+    st.write("**Public accounts**. Data about public accounts is public and can be viewed by anyone.")
+    st.write("**Private accounts**. "
+             "Data about private accounts is hidden and can only be viewed by users who have the secret key.")
+
+    st.write("**You can always change whether your account is private or public on this website**")
     pretty_publicity_options = {choice.name: choice for choice in PublicityChoice}
     publicity_option = st.selectbox(
         "Choose the information type you want to get:",
@@ -92,6 +103,7 @@ if __name__ == "__main__":
     follower_id = -1
 
     if pretty_publicity_options[publicity_option] == PublicityChoice.PUBLIC:
+        st.write("Here you can only discover users who marked their accounts as public.")
 
         public_accounts = mongo_worker.get_public_followers_info()
         if len(public_accounts) != 0:
@@ -107,11 +119,11 @@ if __name__ == "__main__":
             write_error("There is no public account")
         write_change_publicity_status_bot_communication_info()
     else:
+        st.write("Here you can view data about your account without making it public.")
+        st.write("To do this you must obtain a secret key.")
+
         account_info = st.text_input("Enter your surname:")
 
-        # if account_info != "" and account_info.isnumeric() and int(account_info) > 0 and mongo_worker.is_id_exists(account_info):
-        #     if mongo_worker.is_account_with_id_is_public(id):
-        #         st.write("Your account is public")
         if account_info != "" and mongo_worker.is_surname_exists(account_info):
             write_secret_key_bot_communication_info()
 
@@ -126,8 +138,9 @@ if __name__ == "__main__":
             write_account_info_bot_communication_info()
 
     if follower_id != -1:
-        activity_data = mongo_worker.get_activity_info_csv()
-        activity_csv = pd.read_csv(activity_data, sep=",")
+        activity_csv = get_activity_csv()
+        # activity_data = mongo_worker.get_activity_info_csv()
+        # activity_csv = pd.read_csv(activity_data, sep=",")
         activity_csv[DATETIME_KEY] = pd.to_datetime(activity_csv[DATETIME_KEY])
 
         available_dates = DataWorker.get_available_days_for_id(activity_csv, follower_id)
@@ -139,7 +152,14 @@ if __name__ == "__main__":
             pretty_available_datetime_pairs.keys()
         )
 
-        df = data_worker.get_one_day_df_for_id(activity_csv, pretty_available_datetime_pairs[date_option],
+        date = st.date_input(
+            "Choose the date",
+            value=available_dates[len(available_dates) - 1],
+            min_value=available_dates[0],
+            max_value=available_dates[len(available_dates) - 1]
+        )
+
+        df = data_worker.get_one_day_df_for_id(activity_csv, date,
                                                follower_id)
         fig = px.scatter(df, x="index", y="online", color="platform", symbol="platform",
                          labels={
