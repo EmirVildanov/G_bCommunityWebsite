@@ -1,5 +1,5 @@
 # G_bCommunityWebsite
-## Website for tracking Vk G_b community members online activity
+## Website for tracking Vk [G_b](https://vk.com/gebum) community members online activity
 
 * At first, you have to ask Vk community bot to give you secret key.
 Only with this key you will have access to your Vk activity tracking.
